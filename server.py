@@ -1,12 +1,11 @@
 from flask import Flask, request, send_file, jsonify
-from flask_cors import CORS  # Import CORS
+from flask_cors import CORS
 import subprocess
 import os
 import re
 
 app = Flask(__name__)
 
-# Enable CORS for all routes and origins
 CORS(app)
 
 DOWNLOAD_FOLDER = "downloads"
@@ -27,6 +26,7 @@ def download_video():
     title_result = subprocess.run(title_command, shell=True, capture_output=True, text=True)
     
     if title_result.returncode != 0:
+        print("Error fetching title:", title_result.stderr)  # Log error
         return jsonify({"error": title_result.stderr}), 500
 
     # Clean filename to avoid special character issues
@@ -39,8 +39,10 @@ def download_video():
     download_result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
     if download_result.returncode == 0:
-        return send_file(filepath, as_attachment=True)  # Serve the file for direct download
+        print(f"Video downloaded successfully: {filename}")
+        return send_file(filepath, as_attachment=True)
     else:
+        print("Error downloading video:", download_result.stderr)  # Log error
         return jsonify({"error": download_result.stderr}), 500
 
 if __name__ == "__main__":
