@@ -1,4 +1,3 @@
-echo "flask
+flask
 yt-dlp
-gunicorn" > requirements.txt
-
+gunicorn
