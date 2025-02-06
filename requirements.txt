@@ -1,0 +1,4 @@
+echo "flask
+yt-dlp
+gunicorn" > requirements.txt
+
