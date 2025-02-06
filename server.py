@@ -1,9 +1,13 @@
 from flask import Flask, request, send_file, jsonify
+from flask_cors import CORS  # Import CORS
 import subprocess
 import os
 import re
 
 app = Flask(__name__)
+
+# Enable CORS for all routes and origins
+CORS(app)
 
 DOWNLOAD_FOLDER = "downloads"
 os.makedirs(DOWNLOAD_FOLDER, exist_ok=True)
@@ -30,8 +34,8 @@ def download_video():
     filename = re.sub(r'[<>:"/\\|?*]', '', filename)  # Remove invalid filename characters
     filepath = os.path.join(DOWNLOAD_FOLDER, filename)
 
-    # Download video using yt-dlp with bypass options
-    command = f'yt-dlp --no-check-certificate --cookies-from-browser firefox -o "{filepath}" "{video_url}"'
+    # Download video using yt-dlp
+    command = f'yt-dlp -o "{filepath}" "{video_url}"'
     download_result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
     if download_result.returncode == 0:
