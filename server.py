@@ -30,8 +30,8 @@ def download_video():
     filename = re.sub(r'[<>:"/\\|?*]', '', filename)  # Remove invalid filename characters
     filepath = os.path.join(DOWNLOAD_FOLDER, filename)
 
-    # Download video using yt-dlp
-    command = f'yt-dlp -o "{filepath}" "{video_url}"'
+    # Download video using yt-dlp with bypass options
+    command = f'yt-dlp --no-check-certificate --cookies-from-browser firefox -o "{filepath}" "{video_url}"'
     download_result = subprocess.run(command, shell=True, capture_output=True, text=True)
 
     if download_result.returncode == 0:
